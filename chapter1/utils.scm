@@ -5,7 +5,7 @@
           ((divides? test-divisor n) test-divisor)
           (else (find-divisor n (+ test-divisor 1)))))
   (define (divides? a b) (= (remainder b a) 0))
-    (and (> n 1) (= n (smallest-divisor n))))
+  (and (> n 1) (= n (smallest-divisor n))))
 
 (define (average x y)
   (/ (+ x y) 2))
