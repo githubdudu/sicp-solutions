@@ -11,7 +11,7 @@
   (define (deposit amount)
     (set! balance (+ balance amount))
     balance)
-  (define (call-the-cops amount) (display "911!! The cops are on the way."))
+  (define (call-the-cops _) (display "911!! The cops are on the way."))
   (define (dispatch password-unknown m)
     (if (eq? password password-unknown)
         (cond ((eq? m 'withdraw) withdraw)
@@ -24,10 +24,10 @@
               (set! attempt-times (+ 1 attempt-times))
               (error "Incorrect password")))))
 
-    dispatch)
-  ;; Example
-  (define acc (make-account 100 'secret-password))
-  ((acc 'secret-password 'withdraw) 40)
-  ;60
-  ((acc 'some-other-password 'deposit) 50)
-  ;"Incorrect password"
+  dispatch)
+;; Example
+(define acc (make-account 100 'secret-password))
+((acc 'secret-password 'withdraw) 40)
+;60
+((acc 'some-other-password 'deposit) 50)
+;"Incorrect password"

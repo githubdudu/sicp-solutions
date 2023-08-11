@@ -1,5 +1,5 @@
-#lang sicp
-
+#lang racket
+(provide make-account)
 ;;
 (define (make-account balance password)
   (define (withdraw amount)
@@ -16,7 +16,7 @@
               ((eq? m 'deposit) deposit)
               (else (error "Unknown request: MAKE-ACCOUNT"
                            m)))
-        (error "Incorrect password")))
+        (lambda (_) "Incorrect password")))
 
   dispatch)
 ;; Example
