@@ -1,6 +1,6 @@
 #lang sicp
 (#%require "stream.rkt")
-(#%provide stream-ref stream-map stream-for-each display-stream display-line stream-enumerate-interval stream-filter)
+(#%provide (all-defined))
 
 (define (stream-ref s n)
   (if (= n 0)
@@ -21,7 +21,13 @@
 (define (display-stream s)
   (stream-for-each display-line s))
 (define (display-line x) (newline) (display x))
-
+(define (stream-for-each-inf proc s n)
+  (if (= n 0)
+      'done
+      (begin (proc (stream-car s))
+             (stream-for-each-inf proc (stream-cdr s) (- n 1)))))
+(define (display-stream-inf s n)
+  (stream-for-each-inf display-line s n))
 (define (stream-enumerate-interval low high)
   (if (> low high)
       the-empty-stream
