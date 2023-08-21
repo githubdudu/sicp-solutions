@@ -1,5 +1,5 @@
 #lang sicp
-(#%provide cons-stream stream-car stream-cdr)
+(#%provide stream-car stream-cdr)
 ; (define delay  ;use default
 ;   (lambda (exp) (lambda () exp)))
 ; (define (force delayed-object) ; use default
