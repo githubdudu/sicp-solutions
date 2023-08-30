@@ -1,5 +1,5 @@
 #lang sicp
-(define random-init 0)
+(define random-init 0) ;variable x that is initialized to some fixed value random-init
 (define rand
   (let ((x random-init))
     (define (dispatch m)
