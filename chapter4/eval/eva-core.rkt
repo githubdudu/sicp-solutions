@@ -1,4 +1,7 @@
 #lang sicp
+(#%require "apply.rkt")
+(#%provide (all-defined))
+
 (define (eval exp env)
   (cond ((self-evaluating? exp) exp)
         ((variable? exp) (lookup-variable-value exp env))
@@ -199,7 +202,6 @@
 (define (apply-primitive-procedure proc args)
   (apply-in-underlying-scheme
    (primitive-implementation proc) args))
-(define apply-in-underlying-scheme apply)
 
 (define (make-procedure parameters body env)
   (list 'procedure parameters body env))
