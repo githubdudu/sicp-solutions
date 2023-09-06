@@ -1,5 +1,11 @@
 #lang sicp
-(#%require "eva-core.rkt")
+(#%require "eva-core.rkt" racket/lazy-require)
+(lazy-require ["eva-env.rkt" (lookup-variable-value
+                              extend-environment
+                              set-variable-value!
+                              define-variable!)])
+(#%provide actual-value)
+
 (define (eval exp env)
   (cond ((self-evaluating? exp) exp)
         ((variable? exp) (lookup-variable-value exp env))
@@ -52,3 +58,49 @@
                       env)
             (list-of-delayed-args (rest-operands exps)
                                   env))))
+
+(define (eval-if exp env)
+  (if (true? (actual-value (if-predicate exp) env))
+      (eval (if-consequent exp) env)
+      (eval (if-alternative exp) env)))
+(define (eval-sequence exps env)
+  (cond ((last-exp? exps)
+         (eval (first-exp exps) env))
+        (else
+         (eval (first-exp exps) env)
+         (eval-sequence (rest-exps exps) env))))
+
+(define (eval-assignment exp env)
+  (set-variable-value! (assignment-variable exp)
+                       (eval (assignment-value exp) env)
+                       env)
+  'ok)
+(define (eval-definition exp env)
+  (define-variable! (definition-variable exp)
+    (eval (definition-value exp) env)
+    env)
+  'ok)
+;; Representing chunks
+(define (evaluated-thunk? obj)
+  (tagged-list? obj 'evaluated-thunk))
+(define (thunk-value evaluated-thunk)
+  (cadr evaluated-thunk))
+  
+(define (force-it obj)
+  (cond ((thunk? obj)
+         (let ((result (actual-value (thunk-exp obj)
+                                     (thunk-env obj))))
+           (set-car! obj 'evaluated-thunk)
+           (set-car! (cdr obj)
+                     result) ; replace exp with its value
+           (set-cdr! (cdr obj)
+                     '()) ; forget unneeded env
+           result))
+        ((evaluated-thunk? obj) (thunk-value obj))
+        (else obj)))
+(define (delay-it exp env)
+  (list 'thunk exp env))
+(define (thunk? obj)
+  (tagged-list? obj 'thunk))
+(define (thunk-exp thunk) (cadr thunk))
+(define (thunk-env thunk) (caddr thunk))
