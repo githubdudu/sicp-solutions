@@ -201,6 +201,9 @@
         (list '* *)
         (list '= =)
         (list '/ /)
+        (list 'list list)
+        (list 'newline newline)
+        (list 'display display)
         ;⟨more primitives⟩
         ))
 (define (primitive-procedure-names)
